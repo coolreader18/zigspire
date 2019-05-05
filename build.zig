@@ -20,7 +20,7 @@ pub fn build(b: *Builder) !void {
     main.setBuildMode(mode);
     main.setTarget(
         builtin.Arch{
-            .arm = builtin.Arch.Arm32.v5,
+            .arm = builtin.Arch.Arm32.v4t,
         },
         builtin.Os.freestanding,
         builtin.Abi.gnueabi,
