@@ -69,7 +69,7 @@ pub fn build(b: *Builder) !void {
         "firebird-send", CACHE_DIR ++ "zigspire.prg.tns", b.option(
             []const u8,
             "send-dir",
-            "The directory in Firebird to send the program to.",
+            "The directory in Firebird to send the program to. Default /programs",
         ) orelse "/programs",
     });
     firebird_send_step.step.dependOn(&make_prg_step.step);

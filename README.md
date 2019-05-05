@@ -13,8 +13,8 @@ time to do so.
 
 Run `zig build`. That's it! If you have
 [Firebird](https://github.com/nspire-emus/firebird) installed, you can run
-`zig build send` and it will send the built program to `/programs` in your
-emulators file system.
+`zig build send` and it will send the built program to `/programs` or whatever
+directory you define with `-Dsend-dir=/...` in your emulator's file system.
 
 ## License
 
