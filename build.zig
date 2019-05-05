@@ -66,7 +66,11 @@ pub fn build(b: *Builder) !void {
     prg_step.dependOn(&make_prg_step.step);
 
     const firebird_send_step = b.addSystemCommand([][]const u8{
-        "firebird-send", CACHE_DIR ++ "zigspire.prg.tns", "/programs",
+        "firebird-send", CACHE_DIR ++ "zigspire.prg.tns", b.option(
+            []const u8,
+            "send-dir",
+            "The directory in Firebird to send the program to.",
+        ) orelse "/programs",
     });
     firebird_send_step.step.dependOn(&make_prg_step.step);
 
