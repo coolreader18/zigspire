@@ -5,9 +5,18 @@ const builtin = @import("builtin");
 
 const CACHE_DIR = "./zig-cache/";
 
+const MAIN_PROGRAM = "src/main.zig";
+
 pub fn build(b: *Builder) !void {
     const mode = b.standardReleaseOptions();
-    const main = b.addObject("zigspire", "src/main.zig");
+    const main = b.addObject(
+        "zigspire",
+        b.option(
+            []const u8,
+            "exe",
+            "The program to build. Default " ++ MAIN_PROGRAM,
+        ) orelse MAIN_PROGRAM,
+    );
     main.setBuildMode(mode);
     main.setTarget(
         builtin.Arch{
