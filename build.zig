@@ -5,7 +5,7 @@ const builtin = @import("builtin");
 
 const CACHE_DIR = "./zig-cache/";
 
-pub fn build(b: *Builder) void {
+pub fn build(b: *Builder) !void {
     const mode = b.standardReleaseOptions();
     const main = b.addObject("zigspire", "src/main.zig");
     main.setBuildMode(mode);
@@ -16,21 +16,31 @@ pub fn build(b: *Builder) void {
         builtin.Os.freestanding,
         builtin.Abi.gnueabi,
     );
-    main.addIncludeDir(
-        "/usr/share/ndless/ndless-sdk/toolchain/install/bin/../lib/gcc/arm-none-eabi/8.2.0/include",
-    );
-    main.addIncludeDir(
-        "/usr/share/ndless/ndless-sdk/toolchain/install/bin/../lib/gcc/arm-none-eabi/8.2.0/include-fixed",
-    );
-    main.addIncludeDir(
-        "/usr/share/ndless/ndless-sdk/toolchain/install/bin/../lib/gcc/arm-none-eabi/8.2.0/../../../../arm-none-eabi/sys-include",
-    );
-    main.addIncludeDir(
-        "/usr/share/ndless/ndless-sdk/toolchain/install/bin/../lib/gcc/arm-none-eabi/8.2.0/../../../../arm-none-eabi/include",
-    );
-    main.addIncludeDir(
-        "/usr/share/ndless/ndless-sdk/include",
-    );
+
+    const dirname = os.path.dirname;
+    const ndless_dir = dirname(dirname(try b.exec([][]const u8{
+        "which", "nspire-gcc",
+    })) orelse unreachable) orelse unreachable;
+    main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
+        ndless_dir,
+        "toolchain/install/bin/lib/gcc/arm-none-eabi/8.2.0/include",
+    }));
+    main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
+        ndless_dir,
+        "toolchain/install/lib/gcc/arm-none-eabi/8.2.0/include-fixed",
+    }));
+    main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
+        ndless_dir,
+        "toolchain/install/arm-none-eabi/sys-include",
+    }));
+    main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
+        ndless_dir,
+        "toolchain/install/arm-none-eabi/include",
+    }));
+    main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
+        ndless_dir,
+        "include",
+    }));
 
     const link_main_step = b.addSystemCommand([][]const u8{
         "nspire-ld", "-o", CACHE_DIR ++ "main", "-Wl,--gc-sections",
