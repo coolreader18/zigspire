@@ -22,9 +22,11 @@ pub fn build(b: *Builder) !void {
         builtin.Arch{
             .arm = builtin.Arch.Arm32.v4t,
         },
-        builtin.Os.freestanding,
+        builtin.Os.nspire,
         builtin.Abi.gnueabi,
     );
+    main.linkSystemLibrary("c");
+    main.single_threaded = true;
 
     const dirname = os.path.dirname;
     const ndless_dir = dirname(dirname(try b.exec([][]const u8{
@@ -51,8 +53,13 @@ pub fn build(b: *Builder) !void {
         "include",
     }));
 
+    const nspireio = if (b.option(
+        bool,
+        "nspireio",
+        "Whether to build with nspireio or not",
+    ) orelse false) "-Wl,--nspireio" else "-U________";
     const link_main_step = b.addSystemCommand([][]const u8{
-        "nspire-ld", "-o", CACHE_DIR ++ "main", "-Wl,--gc-sections",
+        "nspire-ld", "-o", CACHE_DIR ++ "main", "-Wl,--gc-sections", nspireio,
     });
     link_main_step.addArtifactArg(main);
     link_main_step.step.dependOn(&main.step);

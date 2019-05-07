@@ -4,7 +4,8 @@ Programming with Zig on the TI-Nspire
 
 ## Setup
 
-You need both [Zig](https://ziglang.org) installed somewhere and the
+You need to install
+[my fork of Zig](https://github.com/coolreader18/zig/tree/nspire) and the
 [Ndless SDK](https://github.com/ndless-nspire/Ndless/wiki/Ndless-SDK:-C-and-assembly-development-introduction).
 Be aware that if you don't have the Ndless SDK built, it will take a very long
 time to do so.
