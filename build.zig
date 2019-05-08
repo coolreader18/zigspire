@@ -1,6 +1,7 @@
 const std = @import("std");
 const Builder = std.build.Builder;
 const os = std.os;
+const path = os.path;
 const builtin = @import("builtin");
 
 const CACHE_DIR = "./zig-cache/";
@@ -28,10 +29,9 @@ pub fn build(b: *Builder) !void {
     main.linkSystemLibrary("c");
     main.single_threaded = true;
 
-    const dirname = os.path.dirname;
-    const ndless_dir = dirname(dirname(try b.exec([][]const u8{
+    const ndless_dir = path.dirname(path.dirname(try path.real(try b.exec([][]const u8{
         "which", "nspire-gcc",
-    })) orelse unreachable) orelse unreachable;
+    }))) orelse unreachable) orelse unreachable;
     main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
         ndless_dir,
         "toolchain/install/bin/lib/gcc/arm-none-eabi/8.2.0/include",
