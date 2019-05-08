@@ -30,12 +30,11 @@ fn format_to_cstr(comptime format: []const u8, args: ...) []const u8 {
 
 fn show_msgbox(title: []const u8, comptime format: []const u8, args: ...) void {
     const ctitle = append_null(title);
+    defer alloc.free(ctitle);
     const msg = format_to_cstr(format, args);
     defer alloc.free(msg);
 
     _ = c._show_msgbox(ctitle.ptr, msg.ptr, 0);
-    // I don't know why this is necessary, why it can't just be a defer
-    alloc.free(ctitle);
 }
 
 fn show_msg_user_input(
