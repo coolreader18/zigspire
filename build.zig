@@ -29,9 +29,13 @@ pub fn build(b: *Builder) !void {
     main.linkSystemLibrary("c");
     main.single_threaded = true;
 
-    const ndless_dir = path.dirname(path.dirname(try path.real(try b.exec([][]const u8{
-        "which", "nspire-gcc",
-    }))) orelse unreachable) orelse unreachable;
+    const ndless_dir = b.option(
+        []const u8,
+        "ndless-dir",
+        "The path to your ndless sdk install.",
+    ) orelse path.dirname(try b.exec([][]const u8{
+        "nspire-tools", "path",
+    })) orelse unreachable;
     main.addIncludeDir(try os.path.join(b.allocator, [][]const u8{
         ndless_dir,
         "toolchain/install/bin/lib/gcc/arm-none-eabi/8.2.0/include",
