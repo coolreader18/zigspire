@@ -43,13 +43,17 @@ fn maybeFree(memory: var) void {
     if (memory) |m| alloc.free(m);
 }
 
+inline fn bkpt() void {
+    asm volatile(".long 0xE1212374");
+}
+
 export fn main() void {
     // std.debug.warn("aa\n");
     // std.debug.warn("Press any key to exit...\n");
     // c.wait_key_pressed();
     const maybeThing = show_msg_user_input("hey", "what's your thing", "");
     defer maybeFree(maybeThing);
-
+    bkpt();
     if (maybeThing) |thing| show_msgbox("Hey!", "your thing is {}", thing)
     else show_msgbox("awww", "you have no thing");
 }
