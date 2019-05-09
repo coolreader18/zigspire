@@ -5,7 +5,7 @@ fn maybeFree(memory: var) void {
     if (memory) |m| ndless.allocator.free(m);
 }
 
-export fn main() void {
+pub fn main() void {
     const name = ndless.showMsgUserInput("yo", "", "what's your name kid") orelse {
         ndless.showMsgbox("hey!", "you didn't tell me your name!");
         return;
