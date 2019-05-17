@@ -71,14 +71,14 @@ pub fn build(b: *Builder) !void {
     const genzehn_step = b.addSystemCommand([][]const u8{"genzehn"});
     genzehn_step.addArgs([][]const u8{
         "--input",           CACHE_DIR ++ "main",
-        "--output",          CACHE_DIR ++ "zigspire.tns",
+        "--output",          CACHE_DIR ++ "zigspire.zehn",
         "--240x320-support", "true",
         "--uses-lcd-blit",   "true",
     });
     genzehn_step.step.dependOn(&link_main_step.step);
 
     const make_prg_step = b.addSystemCommand([][]const u8{
-        "make-prg", CACHE_DIR ++ "zigspire.tns", CACHE_DIR ++ "zigspire.prg.tns",
+        "make-prg", CACHE_DIR ++ "zigspire.zehn", CACHE_DIR ++ "zigspire.tns",
     });
     make_prg_step.step.dependOn(&genzehn_step.step);
 
@@ -86,7 +86,7 @@ pub fn build(b: *Builder) !void {
     prg_step.dependOn(&make_prg_step.step);
 
     const firebird_send_step = b.addSystemCommand([][]const u8{
-        "firebird-send", CACHE_DIR ++ "zigspire.prg.tns", b.option(
+        "firebird-send", CACHE_DIR ++ "zigspire.tns", b.option(
             []const u8,
             "send-dir",
             "The directory in Firebird to send the program to. Default /programs",
